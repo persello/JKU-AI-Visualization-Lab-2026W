@@ -20,11 +20,20 @@ You need [uv](https://docs.astral.sh/uv/).
 uv sync
 ```
 
-Get the data (about 20 GB, downloaded to `~/.cache/kagglehub`; set `KAGGLEHUB_CACHE` to put it somewhere else). This also writes a 5-class copy to `data/fsoco5/` with symlinks to the images:
+Get the data. The download is a 19.2 GB zip that unpacks to about 20 GB. Unpacking it while it downloads needs only that much free space:
 
 ```bash
-uv run scripts/prepare_data.py
+mkdir -p data/raw
+curl -L "https://www.kaggle.com/api/v1/datasets/download/persello/fsoco-yolo?datasetVersionNumber=1" | bsdtar -xf - -C data/raw
 ```
+
+Then write the 5-class copy to `data/fsoco5/`, with symlinks to the images:
+
+```bash
+uv run scripts/prepare_data.py --source data/raw/fsoco-yolo
+```
+
+Without `--source`, the script downloads the dataset with kagglehub to `~/.cache/kagglehub` (set `KAGGLEHUB_CACHE` to change it), which needs about twice the space while it unpacks. On Linux, use `bsdtar` from the `libarchive-tools` package.
 
 Fine-tune YOLO26 (uses the GPU: CUDA or Apple MPS). Runs and weights go to `runs/`:
 

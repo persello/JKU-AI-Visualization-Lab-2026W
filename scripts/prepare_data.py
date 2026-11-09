@@ -7,12 +7,14 @@ turns any polygon labels into boxes.
 
 The 2024 split put each image into train, val or test at random (6534 / 1174 / 1215 images), so
 all 41 teams appear in every split. Consecutive frames of one team's recording are nearly
-identical, so test images have near-copies in train. By
-default this script splits again by team (the image name starts with the team folder): about 80 %
-of the images for training, 10 % for validation and 10 % for testing, with every team in only one
-split. Use `--split original` to keep the 2024 split.
+identical, so test images have near-copies in train. By default this script splits again by team
+(the image name starts with the team folder): about 80 % of the images for training, 10 % for
+validation and 10 % for testing, with every team in only one split. Use `--split original` to keep
+the 2024 split.
 
-Images are symlinked, not copied, so the 5-class copy takes only a few MB.
+Images are symlinked, not copied, so the 5-class copy takes only a few MB. Without `--source`, the
+dataset is downloaded with kagglehub, which needs about twice its size while it unpacks; with
+`--source`, an already unpacked `fsoco-yolo/` folder is used (see the README).
 """
 
 import argparse
@@ -86,9 +88,20 @@ def main() -> None:
     parser.add_argument("--out", type=Path, default=Path("data/fsoco5"), help="output folder")
     parser.add_argument("--split", choices=["team", "original"], default="team")
     parser.add_argument("--seed", type=int, default=0, help="seed for the team split")
+    parser.add_argument(
+        "--source",
+        type=Path,
+        default=None,
+        help="unpacked fsoco-yolo/ folder to use instead of downloading with kagglehub",
+    )
     args = parser.parse_args()
 
-    root = Path(kagglehub.dataset_download(DATASET)) / "fsoco-yolo"
+    if args.source is not None:
+        root = args.source
+    else:
+        root = Path(kagglehub.dataset_download(DATASET)) / "fsoco-yolo"
+    if not (root / "data.yaml").exists():
+        parser.error(f"{root / 'data.yaml'} not found; --source must be the fsoco-yolo/ folder")
     old_names = yaml.safe_load((root / "data.yaml").read_text())["names"]
     remap = {i: CLASSES.index(name.removeprefix("seg_")) for i, name in enumerate(old_names)}
 
