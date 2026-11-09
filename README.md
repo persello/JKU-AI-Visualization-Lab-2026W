@@ -29,7 +29,7 @@ uv run scripts/prepare_data.py
 Fine-tune YOLO26 (uses the GPU: CUDA or Apple MPS). Runs and weights go to `runs/`:
 
 ```bash
-uv run scripts/train.py --model yolo26s.pt --imgsz 1280 --hours 10
+uv run scripts/train.py --model yolo26s.pt --imgsz 1280 --hours 8 --cache
 ```
 
 Check code with `uv run ruff check` and `uv run ty check`.

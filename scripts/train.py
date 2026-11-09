@@ -37,6 +37,11 @@ def main() -> None:
         help="stop after this many hours (overrides --epochs)",
     )
     parser.add_argument("--batch", type=int, default=16)
+    parser.add_argument(
+        "--cache",
+        action="store_true",
+        help="keep the resized images in RAM (about 20 GB at imgsz 1280); faster epochs",
+    )
     parser.add_argument("--device", default=default_device())
     parser.add_argument(
         "--name",
@@ -52,6 +57,7 @@ def main() -> None:
         epochs=args.epochs,
         time=args.hours,
         batch=args.batch,
+        cache="ram" if args.cache else False,
         device=args.device,
         project=str(Path("runs").resolve()),
         name=args.name or f"{Path(args.model).stem}-{args.imgsz}",
