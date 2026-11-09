@@ -27,6 +27,8 @@ mkdir -p data/raw
 curl -L "https://www.kaggle.com/api/v1/datasets/download/persello/fsoco-yolo?datasetVersionNumber=1" | bsdtar -xf - -C data/raw
 ```
 
+At the end, curl may report `(56) Failure writing output`: bsdtar stops reading after the last file, before the zip's index. The download is complete if `data/raw/fsoco-yolo` has 8923 images (6534 in `train`, 1174 in `validate`, 1215 in `test`).
+
 Then write the 5-class copy to `data/fsoco5/`, with symlinks to the images:
 
 ```bash
