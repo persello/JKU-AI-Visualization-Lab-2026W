@@ -12,7 +12,8 @@ Tool and model: Claude Code (Claude Opus 5.5)
 
 - Read the 2024 checkpoint's training arguments as data: YOLOv8n, Ultralytics 8.1.5, imgsz 1408, 100 epochs (best at 86), 10 classes.
 - Set up the uv environment (Ultralytics 8.4, PyTorch, ruff, ty).
-- Wrote `scripts/prepare_data.py`, which merges the 10 FSOCO classes into 5 (the `seg_` classes are the same cones from the segmentation part of FSOCO) and turns polygon labels into boxes.
+- Read our 2024 code (`persello/daml-notebooks`, `exam/`) and found that it trained from scratch, split the images at random into thirds, and so had near-duplicate frames in train and test.
+- Wrote `scripts/prepare_data.py`, which merges the 10 FSOCO classes into 5 (the `seg_` classes come from FSOCO's class list for the segmentation set), turns polygon labels into boxes, and splits the data again by team (80/10/10).
 - Wrote `scripts/train.py` for fine-tuning YOLO26.
 - Created the folder layout and the files the course asks for (`team-info.json`, `workload.json`, this folder).
 

@@ -6,9 +6,11 @@ AI and Visualization lab, JKU, 2026W.
 
 **Task.** Cone detection for Formula Student Driverless. We analyse how detection performance changes with distance and motion: the cone's visual size, and how much and in which direction it moves.
 
-**Model.** YOLO26 ([Ultralytics](https://docs.ultralytics.com/models/yolo26/)), pretrained on COCO and fine-tuned on FSOCO with `scripts/train.py`. Our earlier model from 2024, a YOLOv8n trained on the same data, is on Kaggle as [`persello/colo`](https://www.kaggle.com/models/persello/colo).
+**Model.** YOLO26 ([Ultralytics](https://docs.ultralytics.com/models/yolo26/)), pretrained on COCO and fine-tuned on FSOCO with `scripts/train.py`. Our earlier model from 2024, a YOLOv8n trained from scratch on the same data, is on Kaggle as [`persello/colo`](https://www.kaggle.com/models/persello/colo); its code is in [`persello/daml-notebooks`](https://github.com/persello/daml-notebooks/tree/main/exam).
 
 **Dataset.** [FSOCO](https://fsoco.github.io/fsoco-dataset/) (Formula Student Objects in Context), images from many Formula Student teams with cone annotations. We use our YOLO-format copy on Kaggle, [`persello/fsoco-yolo`](https://www.kaggle.com/datasets/persello/fsoco-yolo), with five classes: blue, yellow, orange, large orange and unknown cone.
+
+`scripts/prepare_data.py` splits the images again by team: about 80 % for training, 10 % for validation and 10 % for testing, and every team is in only one split. The 2024 split was random per image, one third each, so test images had near-copies (neighbouring frames) in the training set. `--split original` keeps it.
 
 ## Setup
 
