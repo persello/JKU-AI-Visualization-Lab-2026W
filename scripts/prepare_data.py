@@ -5,8 +5,9 @@ bounding-box set. It has 10 classes because it took the class list from FSOCO's 
 also lists the `seg_` classes of the segmentation set. This script merges them into 5 classes and
 turns any polygon labels into boxes.
 
-The 2024 split put each image into train, val or test at random, one third each. Consecutive
-frames of one team's recording are nearly identical, so test images had near-copies in train. By
+The 2024 split put each image into train, val or test at random (6534 / 1174 / 1215 images), so
+all 41 teams appear in every split. Consecutive frames of one team's recording are nearly
+identical, so test images have near-copies in train. By
 default this script splits again by team (the image name starts with the team folder): about 80 %
 of the images for training, 10 % for validation and 10 % for testing, with every team in only one
 split. Use `--split original` to keep the 2024 split.

@@ -10,7 +10,7 @@ AI and Visualization lab, JKU, 2026W.
 
 **Dataset.** [FSOCO](https://fsoco.github.io/fsoco-dataset/) (Formula Student Objects in Context), images from many Formula Student teams with cone annotations. We use our YOLO-format copy on Kaggle, [`persello/fsoco-yolo`](https://www.kaggle.com/datasets/persello/fsoco-yolo), with five classes: blue, yellow, orange, large orange and unknown cone.
 
-`scripts/prepare_data.py` splits the images again by team: about 80 % for training, 10 % for validation and 10 % for testing, and every team is in only one split. The 2024 split was random per image, one third each, so test images had near-copies (neighbouring frames) in the training set. `--split original` keeps it.
+`scripts/prepare_data.py` splits the images again by team: about 80 % for training, 10 % for validation and 10 % for testing, and every team is in only one split. The 2024 split was random per image (6534 / 1174 / 1215 images, all 41 teams in every split), so test images have near-copies (neighbouring frames) in the training set. `--split original` keeps it.
 
 ## Setup
 
