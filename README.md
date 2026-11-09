@@ -12,6 +12,16 @@ AI and Visualization lab, JKU, 2026W.
 
 `scripts/prepare_data.py` splits the images again by team: about 80 % for training, 10 % for validation and 10 % for testing, and every team is in only one split. The 2024 split was random per image (6534 / 1174 / 1215 images, all 41 teams in every split), so test images have near-copies (neighbouring frames) in the training set. `--split original` keeps it.
 
+## Trained model
+
+Our fine-tuned YOLO26s is in the release [`yolo26s-fsoco5-v1`](https://github.com/persello/JKU-AI-Visualization-Lab-2026W/releases/tag/yolo26s-fsoco5-v1) (19.5 MB):
+
+```bash
+curl -LO https://github.com/persello/JKU-AI-Visualization-Lab-2026W/releases/download/yolo26s-fsoco5-v1/yolo26s-fsoco5.pt
+```
+
+It was trained with the command at the end of Setup and stopped after epoch 7, when validation mAP50-95 reached a new best. On the validation split (1071 images from 3 teams that are not in the training split), precision is 0.727, recall 0.836, mAP50 0.834 and mAP50-95 0.543. Predict with `imgsz=1280`, the training image size.
+
 ## Setup
 
 You need [uv](https://docs.astral.sh/uv/).
@@ -37,7 +47,7 @@ uv run scripts/prepare_data.py --source data/raw/fsoco-yolo
 
 Without `--source`, the script downloads the dataset with kagglehub to `~/.cache/kagglehub` (set `KAGGLEHUB_CACHE` to change it), which needs about twice the space while it unpacks. On Linux, use `bsdtar` from the `libarchive-tools` package.
 
-Fine-tune YOLO26 (uses the GPU: CUDA or Apple MPS). Runs and weights go to `runs/`:
+To train a new model, fine-tune YOLO26 (uses the GPU: CUDA or Apple MPS). Runs and weights go to `runs/`:
 
 ```bash
 uv run scripts/train.py --model yolo26s.pt --imgsz 1280 --hours 8 --cache
