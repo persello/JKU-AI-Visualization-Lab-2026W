@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
+.ruff_cache/
+
+# Data, training runs and weights stay out of git (see README for where to get them)
+data/
+runs/
+*.pt
+*.onnx

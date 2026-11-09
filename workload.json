@@ -1,0 +1,9 @@
+{
+    "team_name": "Azure Beetles",
+    "students": [
+        {"first_name": "Riccardo", "last_name": "Persello", "workload": 0.25},
+        {"first_name": "", "last_name": "", "workload": 0.25},
+        {"first_name": "", "last_name": "", "workload": 0.25},
+        {"first_name": "", "last_name": "", "workload": 0.25}
+    ]
+}

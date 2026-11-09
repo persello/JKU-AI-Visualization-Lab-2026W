@@ -1,0 +1,33 @@
+{
+    "team_name": "Azure Beetles",
+    "students": [
+        {
+            "student_id": "k12455640",
+            "first_name": "Riccardo",
+            "last_name": "Persello",
+            "email": "k12455640@students.jku.at",
+            "github_user": "persello"
+        },
+        {
+            "student_id": "k12518337",
+            "first_name": "",
+            "last_name": "",
+            "email": "",
+            "github_user": ""
+        },
+        {
+            "student_id": "k12542264",
+            "first_name": "",
+            "last_name": "",
+            "email": "",
+            "github_user": ""
+        },
+        {
+            "student_id": "k12315344",
+            "first_name": "",
+            "last_name": "",
+            "email": "",
+            "github_user": ""
+        }
+    ]
+}

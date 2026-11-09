@@ -1,0 +1,25 @@
+[project]
+name = "azure-beetles"
+version = "0.1.0"
+description = "AI and Visualization lab 2026W: a YOLO26 cone detector fine-tuned on FSOCO"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "ipykernel>=7.4.0",
+    "kagglehub>=1.0.3",
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.4",
+    "pandas>=3.1.1",
+    "pyyaml>=6.0.3",
+    "torch>=2.15.0",
+    "ultralytics>=8.4.208",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.17.4",
+    "ty>=0.0.99",
+]
+
+[tool.ruff]
+line-length = 100
