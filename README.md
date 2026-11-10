@@ -55,6 +55,12 @@ uv run scripts/train.py --model yolo26s.pt --imgsz 1280 --hours 8 --cache
 
 Check code with `uv run ruff check` and `uv run ty check`.
 
+Build the slides with [Typst](https://typst.app) from the repository root. `mode=presentation` shows each reveal step on its own page, with the speaker notes on a second screen:
+
+```bash
+typst compile --root . --input mode=handout slides/midpoint.typ slides/midpoint.pdf
+```
+
 ## Repository layout
 
 | Path | Contents |
@@ -62,6 +68,7 @@ Check code with `uv run ruff check` and `uv run ty check`.
 | `scripts/` | Data preparation and training, shared by both pairs |
 | `phase1/ai-aided/`, `phase1/human-only/` | Phase I work of each pair |
 | `phase2/ai-aided/`, `phase2/human-only/` | Phase II work of each pair (the pairs swap roles) |
+| `slides/` | Typst slides for the midpoint video and the final presentation; names go in `slides/team.typ` |
 | `ai-interactions/` | Record of the AI-aided pair's use of generative AI |
 | `ai_reflection_midpoint.md` | Reflection on GenAI use in Phase I |
 | `team-info.json`, `workload.json` | Team details for the course |
