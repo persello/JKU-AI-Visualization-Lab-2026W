@@ -35,7 +35,7 @@
 #pause
 - Our question: how does detection change with the cone's distance and motion?
 #pause
-- Far cones are only a few pixels tall and a moving car blurs them, exactly where the car must look ahead.
+- The cones that matter most for planning are the far ones, and those are a few pixels tall.
 
 #speaker-note[About 0:20.]
 
@@ -45,17 +45,17 @@
 #pause
 - FSOCO split by team, so validation and test teams are never seen in training.
 #pause
-- Phase I: the test split (teams never seen in training) and onboard videos from Formula Student events.
+- Phase I: the test split, 962 images and 19,089 cones from 4 unseen teams, plus three onboard videos.
 
 #speaker-note[About 0:20.]
 
 == Common direction
 
-- Main questions: how do recall and confidence change with cone size (distance) and with motion?
+- Main questions: how does detection change with a cone's distance, and with motion?
 #pause
-- Data: FSOCO test split and onboard driverless videos.
+- Data: the FSOCO test split, blurred copies of it, and three onboard race videos.
 #pause
-- First visualization: detection quality against cone height in pixels.
+- First visualization: recall against the cone's height in the image.
 
 #speaker-note[About 0:20. Agreed by the whole group before the pairs split.]
 
@@ -67,37 +67,53 @@
 
 #pause
 
-- Matched every detection to the labels and measured recall and confidence by cone height.
+- Every box on the test split, down to confidence 0.001, matched to the labels at IoU 0.5.
 #pause
-- Added synthetic motion blur (2 directions, 4 lengths) and tracked cones in 3 onboard videos.
-
-#speaker-note[About 0:20.]
-
-== Recall by cone size
-
-#align(center, image("../phase1/human-only/figures/recall_by_size.svg", height: 85%))
-
-#speaker-note[About 0:30.]
-
-== Small cones are the weak point
-
-- Recall above 99 % for cones taller than 23 px, but 77 % below 6 px, where precision is only 42 %.
+- Cones binned by their height at the model input: height stands for distance.
 #pause
-- 19,089 labelled cones from teams never seen in training; the drop shows in every class.
+- Motion, which FSOCO does not label: blurred copies of the same images, and the onboard videos.
+
+#speaker-note[About 0:20. Four teams the model has never seen. We keep every box, so the
+threshold stays ours to choose afterwards.]
+
+== Recall falls below 16 px, fastest for orange
+
+#block(
+  height: 1fr,
+  width: 100%,
+  image("../phase1/human-only/figures/recall_by_size.svg", width: 100%, height: 100%, fit: "contain"),
+)
+
+#speaker-note[About 0:30. Cone height at the model input on the x axis, log scale. Watch where
+each colour leaves the plateau: large orange goes first, at about 16 px.]
+
+== Distance: small cones are missed, not mistaken
+
+- Recall 0.99 above 23 px, 0.77 under 6 px. Precision falls further: 0.97 to 0.42.
 #pause
-- A cone a few pixels tall shows almost no shape or colour for the model to use.
-
-#speaker-note[About 0:20.]
-
-== Blur hurts small cones first
-
-- Small cones (< 11 px): recall 85 % → 32 % at 8 px of horizontal blur, almost 0 % at 16 px.
+- Systematic, not cherry-picked: 19,089 cones, and 85 % of the false boxes are under 11 px.
 #pause
-- Same images, only the blur changes; large cones keep 99 % recall even at 16 px.
+- They are missed outright (15 %), not given the wrong class (1 %).
 #pause
-- Blur spreads a small cone's few pixels until its outline disappears.
+- But #alert[the camera matters as much as the size]: in the smallest bin, 0.86 for aristurtle
+  against 0.12 for amz.
 
-#speaker-note[About 0:20.]
+#speaker-note[About 0:20. Median confidence stays above the 0.25 threshold even for the smallest
+cones, so the threshold is not what removes them: the evidence thins.]
+
+== Motion: a cone survives until the blur is its own width
+
+- Blur about as long as a cone is wide removes it, and small cones go first.
+#pause
+- Under 11 px: recall 0.85 unblurred, 0.75 at 4 px, 0.32 at 8 px, 0.005 at 16 px.
+#pause
+- Sideways costs more than vertical, 0.32 against 0.50 at 8 px: a cone is narrower than it is tall.
+#pause
+- On real video the detector keeps up, #alert[the tracker does not]: BoT-SORT holds 18–33 % of the
+  detections while driving, against about half while the car stands.
+
+#speaker-note[About 0:20. The blur is synthetic because FSOCO has no motion labels. The last bullet
+is the surprise: the weak part is outside the model, in the tracker's default settings.]
 
 = AI-aided pair
 

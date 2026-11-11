@@ -2,8 +2,8 @@
     "team_name": "Azure Beetles",
     "students": [
         {"first_name": "Riccardo", "last_name": "Persello", "workload": 0.25},
-        {"first_name": "", "last_name": "", "workload": 0.25},
-        {"first_name": "", "last_name": "", "workload": 0.25},
-        {"first_name": "", "last_name": "", "workload": 0.25}
+        {"first_name": "Arteljana", "last_name": "Saliasi", "workload": 0.25},
+        {"first_name": "Mark", "last_name": "Berezc", "workload": 0.25},
+        {"first_name": "Eram", "last_name": "Ansari", "workload": 0.25}
     ]
 }
