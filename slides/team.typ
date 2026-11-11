@@ -7,10 +7,10 @@
 
 #let group = [Azure Beetles]
 #let course = [UE AI and Visualization, JKU, 2026W]
-#let institution = [Institute of Visual Data Science]
+#let institution = [Visual Data Science Lab]
 #let title = [How a cone detector sees distance and motion]
 
-#let pair-a = ([Riccardo Persello], todo[Name])
+#let pair-a = ([Riccardo Persello], [Mark Berezc])
 #let pair-b = ([Eram Shaikh], [Arteljana Saliasi])
 
 #let names(pair) = pair.join[ and ]
