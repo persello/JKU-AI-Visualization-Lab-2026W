@@ -11,7 +11,7 @@
 #let title = [How a cone detector sees distance and motion]
 
 #let pair-a = ([Riccardo Persello], todo[Name])
-#let pair-b = (todo[Name], todo[Name])
+#let pair-b = ([Eram Shaikh], [Arteljana Saliasi])
 
 #let names(pair) = pair.join[ and ]
 #let everyone = (pair-a + pair-b).join[, ]
