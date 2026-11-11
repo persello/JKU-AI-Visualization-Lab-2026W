@@ -47,19 +47,107 @@ uv run scripts/prepare_data.py --source data/raw/fsoco-yolo
 
 Without `--source`, the script downloads the dataset with kagglehub to `~/.cache/kagglehub` (set `KAGGLEHUB_CACHE` to change it), which needs about twice the space while it unpacks. On Linux, use `bsdtar` from the `libarchive-tools` package.
 
-To train a new model, fine-tune YOLO26 (uses the GPU: CUDA or Apple MPS). Runs and weights go to `runs/`:
+Check code with `uv run ruff check`, `uv run ruff format --check` and `uv run ty check`.
+
+## Train
+
+Fine-tune YOLO26 on the 5-class copy (uses the GPU: CUDA or Apple MPS). Runs and weights go to `runs/`:
 
 ```bash
 uv run scripts/train.py --model yolo26s.pt --imgsz 1280 --hours 8 --cache
 ```
 
-Check code with `uv run ruff check` and `uv run ty check`.
+`--cache` keeps the resized images in RAM (about 20 GB). The best weights are written to `runs/yolo26s-1280/weights/best.pt`. To skip training, download our model from the release (see [Trained model](#trained-model)).
+
+## Run inference
+
+Use the Ultralytics command line with our weights (`runs/yolo26s-1280/weights/best.pt`, or `yolo26s-fsoco5.pt` from the release) and the training image size. `source` can be an image or a folder (for videos, see below). The annotated output goes to `runs/detect/predict*/`:
+
+```bash
+uv run yolo predict model=runs/yolo26s-1280/weights/best.pt source=data/fsoco5/test/images imgsz=1280
+```
+
+Onboard videos from Formula Student driverless events. They have no labels, but they show real motion:
+
+| Video | Team |
+|---|---|
+| [Winning Driverless Trackdrive at FS Czech 2025](https://www.youtube.com/watch?v=o5vES5QaeiQ) | Chalmers Formula Student |
+| [Formula Student East Driverless Autocross](https://www.youtube.com/watch?v=CrISno91wPg) | KA-RaceIng |
+| [Skidpad Driverless ONBOARD at Formula Student Spain](https://www.youtube.com/watch?v=aPPk06QK_ME) | BCN eMotorsport |
+
+The team `ka` in our training split is probably KA-RaceIng, so the model may know that car and camera. Chalmers and BCN eMotorsport do not appear by name in FSOCO.
+
+Download a video with [yt-dlp](https://github.com/yt-dlp/yt-dlp) (video only, up to 1080p) to `data/videos/`. The three videos take about 300 MB. They belong to their teams: keep them out of git (`data/` is ignored).
+
+```bash
+uvx yt-dlp -f "bv*[height<=1080][ext=mp4]" -o "data/videos/%(id)s.%(ext)s" "https://www.youtube.com/watch?v=o5vES5QaeiQ"
+```
+
+Then track the cones through the videos (Ultralytics' BoT-SORT, which gives each cone an ID across frames). The script runs in stream mode: without it, Ultralytics keeps the results of every frame in memory. It writes the annotated videos and a CSV of all tracked boxes to `runs/phase1/videos/`. The three videos take about 8 minutes on an Apple-silicon laptop:
+
+```bash
+uv run phase1/human-only/video_track.py data/videos/*.mp4
+```
+
+## Phase I analysis: cone size and motion
+
+The results and which figure goes on which slide are in [`phase1/human-only/FINDINGS.md`](phase1/human-only/FINDINGS.md). Each script's docstring describes its method.
+
+Run the model on the test split (4 teams not in training). It saves every box down to confidence 0.001 to `runs/phase1/test/`:
+
+```bash
+uv run phase1/human-only/predict_test.py
+```
+
+Match the boxes to the labels and draw the size figures and some example images. This takes a few seconds:
+
+```bash
+uv run phase1/human-only/size_analysis.py
+```
+
+```bash
+uv run phase1/human-only/examples.py
+```
+
+For motion, run the model again on blurred copies of the test images (2 directions, 4 blur lengths, and no blur), then compare:
+
+```bash
+uv run phase1/human-only/blur_test.py
+```
+
+```bash
+uv run phase1/human-only/blur_analysis.py
+```
+
+For real motion, use the onboard videos (see [Run inference](#run-inference) for downloading them and for `video_track.py`). Run the detector alone on 5 frames per second, then compare the detections and the tracked boxes with the image motion, and describe the tracks:
+
+```bash
+uv run phase1/human-only/video_detect.py data/videos/*.mp4
+```
+
+```bash
+uv run phase1/human-only/video_motion.py
+```
+
+```bash
+uv run phase1/human-only/video_stability.py
+```
+
+The figures (PNG and SVG) go to `phase1/human-only/figures/` and the tables to `phase1/human-only/results/`.
+
+## Slides
 
 Build the slides with [Typst](https://typst.app) from the repository root. `mode=presentation` shows each reveal step on its own page, with the speaker notes on a second screen:
 
 ```bash
 typst compile --root . --input mode=handout slides/midpoint.typ slides/midpoint.pdf
 ```
+
+```bash
+typst compile --root . --input mode=presentation slides/midpoint.typ slides/midpoint-presentation.pdf
+```
+
+Figures from `phase1/` can be placed with `#image("../phase1/human-only/figures/recall_by_size.svg")`.
 
 ## Repository layout
 
